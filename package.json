@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "mongoose": "^8.13.1"
+  },
+  "name": "node",
+  "version": "1.0.0",
+  "description": "- Going through with all the concept in Backend with NodeJs one after another",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
