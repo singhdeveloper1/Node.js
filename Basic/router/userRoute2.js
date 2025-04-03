@@ -7,7 +7,7 @@ const RandomData = [
         lastname : "last1",
         email : "first5@gmail.com",
         password : "1234",
-        dob : "2001-06-23T12:30:00Z",
+        dob : "1995-06-23T12:30:00Z",
         mobile : 1234
     },
 
@@ -16,7 +16,7 @@ const RandomData = [
         lastname : "last1",
         email : "first2@gmail.com",
         password : "1234",
-        dob : "2001-06-23T12:30:00Z",
+        dob : "1999-06-23T12:30:00Z",
         mobile : 1234
     },
 
@@ -47,6 +47,7 @@ let insert = async ()=>{
             console.log("user m h error", error)
         }
         const profile = new UserProfile({
+            userId : newUser._id,
             dob : data.dob,
             mobile : data.mobile
         })

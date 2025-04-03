@@ -3,6 +3,7 @@ import express from "express"
 import Router from "./router/userRouter.js";
 import cors from "cors"
 import insert from "./router/userRoute2.js";
+import profile from "./router/average.js"
 
 
 
@@ -13,7 +14,8 @@ app.use(express.json())
 
 
 // app.use("/api", Router)
-insert()
+// insert()
+profile()
 
 connectDB().then(()=>{
     app.listen(4000, ()=>{
