@@ -1,16 +1,24 @@
-var fs = require("fs")
+import connectDB from "./db/db.js";
+import express from "express"
+import Router from "./router/userRouter.js";
+import cors from "cors"
+import insert from "./router/userRoute2.js";
 
-function hello(){
-    console.log("Inside Function")
-}
 
-console.log("Simple log")
 
-fs.readFile("file.txt","Utf8", (err,res)=>{
-    if(err){
-        console.log("cannot get the file")
-    }
-    console.log(res)
+const app = express()
+
+app.use(cors())
+app.use(express.json())
+
+
+app.use("/api", Router)
+// insert()
+
+connectDB().then(()=>{
+    app.listen(4000, ()=>{
+        console.log("server is running at 4000")
+    })
+}).catch((err)=>{
+    console.log("db m h error", err)
 })
-
-hello()

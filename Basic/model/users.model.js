@@ -15,7 +15,6 @@ const userSchema = new mongoose.Schema({
     email : {
         type : String,
         required : true,
-        unique : [true, "emil is already exist"]
     },
 
     password : {
@@ -24,7 +23,7 @@ const userSchema = new mongoose.Schema({
     }
 },{timestamps : true})
 
-userSchema.methods.hashedPassword = function(password){
+userSchema.statics.hashedPassword = function(password){
     return bcrypt.hashSync(password , 10)
 }
 
