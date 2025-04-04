@@ -54,3 +54,23 @@ export const getUser = async(req, res)=>{
 
     res.status(200).json(req.user)
 }
+
+//! deleteUser
+
+export const deleteUser = async (req, res) =>{    
+
+    try {
+        res.clearCookie("token")
+
+        const id = req.user._id
+     
+        await User.findByIdAndDelete(id)        
+
+        res.status(200).json({msg : "deleted"})
+
+    } catch (error) {
+        console.log("delete user m h error", error)
+    }
+
+        
+}
