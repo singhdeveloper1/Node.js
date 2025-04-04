@@ -34,7 +34,9 @@ export const loginUser = async(req, res)=>{
 
             if(!match) return res.status(401).json({msg : "invalid user"})
     
-            const token = user.generateToken()        
+            const token = await user.generateToken()        
+
+            res.cookie("token", token)
 
             res.status(200).json({user, token})        
 
@@ -44,4 +46,11 @@ export const loginUser = async(req, res)=>{
         console.log("login me h error", error)
     }
 
+}
+
+//! get
+
+export const getUser = async(req, res)=>{
+
+    res.status(200).json(req.user)
 }
