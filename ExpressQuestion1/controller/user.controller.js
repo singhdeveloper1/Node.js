@@ -1,3 +1,4 @@
+import Address from "../model/address.model.js"
 import Token from "../model/token.model.js"
 import User from "../model/user.model.js"
 
@@ -101,5 +102,31 @@ export const getLimitedUser = async(req, res)=>{
 
     } catch (error) {
         console.log("get limited user m h error", error)
+    }
+}
+
+//! address
+
+export const userAddress  = async (req, res)=>{
+
+    const {address, city, state, pinCode, phone} = req.body
+
+    const user_id = req.user._id
+    console.log(user_id)
+
+    const newAddress = new Address({
+        user_id,
+        address,
+        state,
+        city,
+        pinCode,
+        phone
+    })
+
+    try {
+        await newAddress.save()
+        res.status(200).json(newAddress)
+    } catch (error) {
+        console.log("address m h error", error)
     }
 }
