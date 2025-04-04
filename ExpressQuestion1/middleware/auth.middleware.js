@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import User from "../model/user.model.js"
+import Token from "../model/token.model.js"
 
 export const authentication = async (req, res, next) =>{
 
@@ -7,6 +8,11 @@ export const authentication = async (req, res, next) =>{
 
     
     if(!token) return res.status(401).json({msg : "unauthorized"})
+
+        const check = await Token.findOne({access_token : token})
+
+        if(!check) return res.status(401).json({msg : "unauthorized"})
+
         try {
 
             const verify = jwt.verify(token, process.env.KEY)

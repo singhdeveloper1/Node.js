@@ -1,3 +1,4 @@
+import Token from "../model/token.model.js"
 import User from "../model/user.model.js"
 
 export const registerUser = async (req, res)=>{
@@ -35,6 +36,17 @@ export const loginUser = async(req, res)=>{
             if(!match) return res.status(401).json({msg : "invalid user"})
     
             const token = await user.generateToken()        
+
+
+
+        //! to adding token in Token model 
+            const newToken = new Token({
+                user_id : user._id,
+               access_token :  token
+            })
+            await  newToken.save()
+
+
 
             res.cookie("token", token)
 
