@@ -74,3 +74,20 @@ export const deleteUser = async (req, res) =>{
 
         
 }
+
+export const getLimitedUser = async(req, res)=>{
+    try {
+        const number = req.params.page *10
+       
+
+       
+            
+            const user =  await User.find().skip(number - 10).limit(10)
+            res.status(200).json(user)
+       
+
+
+    } catch (error) {
+        console.log("get limited user m h error", error)
+    }
+}
