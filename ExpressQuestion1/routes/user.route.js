@@ -9,6 +9,6 @@ router.post("/login", loginUser)
 router.get("/get", authentication, getUser)
 router.delete("/delete", authentication, deleteUser)
 router.get("/list/:page", getLimitedUser)
-router.post("/address", authentication, userAddress)
+router.post("/address", authentication, userAddress )
 
 export default router 

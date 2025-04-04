@@ -111,7 +111,7 @@ export const userAddress  = async (req, res)=>{
 
     const {address, city, state, pinCode, phone} = req.body
 
-    const user_id = req.user._id
+    const user_id = req.user._id 
     console.log(user_id)
 
     const newAddress = new Address({
