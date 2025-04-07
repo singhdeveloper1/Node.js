@@ -65,7 +65,19 @@ export const loginUser = async(req, res)=>{
 
 export const getUser = async(req, res)=>{
 
-    res.status(200).json(req.user)
+    const id  = req.user._id
+
+    // const address = await Address.findOne({user_id : id})
+    const address = await Address.find({user_id : {$in : id}})
+
+
+    if(address){
+    res.status(200).json({user : req.user , address : address})
+    }
+    else{
+        res.status(200).json(req.user)
+    }
+    
 }
 
 //! deleteUser
@@ -112,7 +124,7 @@ export const userAddress  = async (req, res)=>{
     const {address, city, state, pinCode, phone} = req.body
 
     const user_id = req.user._id 
-    console.log(user_id)
+    // console.log(user_id)
 
     const newAddress = new Address({
         user_id,
@@ -129,4 +141,25 @@ export const userAddress  = async (req, res)=>{
     } catch (error) {
         console.log("address m h error", error)
     }
+}
+
+//! delete Address
+
+export const deleteAddress = async (req, res)=>{
+
+    try {
+        const ids = req.query.ids
+    
+        const id = typeof ids === "string" ?  ids.split(",") : []
+        // console.log(id)
+
+        await Address.deleteMany({_id : {$in : id}})
+
+        res.status(200).json({msg : "deleted"})
+        
+    } catch (error) {
+        console.log("delete address m h error", error)
+    }
+
+
 }

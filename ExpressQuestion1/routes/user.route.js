@@ -1,5 +1,5 @@
 import express from "express"
-import { deleteUser, getLimitedUser, getUser, loginUser, registerUser, userAddress } from "../controller/user.controller.js"
+import { deleteAddress, deleteUser, getLimitedUser, getUser, loginUser, registerUser, userAddress } from "../controller/user.controller.js"
 import { authentication } from "../middleware/auth.middleware.js"
 
 const router = express.Router()
@@ -10,5 +10,6 @@ router.get("/get", authentication, getUser)
 router.delete("/delete", authentication, deleteUser)
 router.get("/list/:page", getLimitedUser)
 router.post("/address", authentication, userAddress )
+router.delete("/delete/address", authentication, deleteAddress)
 
 export default router 
