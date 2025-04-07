@@ -71,9 +71,10 @@ export const getUser = async(req, res)=>{
 
     // const address = await Address.findOne({user_id : id})
     const address = await Address.find({user_id : {$in : id}})
+   
 
 
-    if(address){
+    if(address && address.length > 0){
     res.status(200).json({user : req.user , address : address})
     }
     else{
@@ -151,9 +152,11 @@ export const deleteAddress = async (req, res)=>{
 
     try {
         const ids = req.query.ids
+
+        if(ids.lenght ==0) return res.status(401).json({msg : "provide id to delete addresses"}) 
     
         const id = typeof ids === "string" ?  ids.split(",") : []
-        // console.log(id)
+        console.log(id)
 
         await Address.deleteMany({_id : {$in : id}})
 
@@ -166,7 +169,7 @@ export const deleteAddress = async (req, res)=>{
 
 }
 
-//! fogot password token
+//! forgot password token
 
 export const passwordToken = async (req, res)=>{
 
