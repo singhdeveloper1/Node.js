@@ -1,6 +1,8 @@
 import Address from "../model/address.model.js"
 import Token from "../model/token.model.js"
 import User from "../model/user.model.js"
+import jwt from "jsonwebtoken"
+import bcrypt from "bcryptjs"
 
 export const registerUser = async (req, res)=>{
     const {username, password, confirmPassword, email, firstname, lastname} = req.body
@@ -32,7 +34,7 @@ export const loginUser = async(req, res)=>{
     
         if(!user) return res.status(401).json({msg : "invalid user"})
 
-            const match = user.comparePassword(password)
+            const match = await user.comparePassword(password)
 
             if(!match) return res.status(401).json({msg : "invalid user"})
     
@@ -65,7 +67,20 @@ export const loginUser = async(req, res)=>{
 
 export const getUser = async(req, res)=>{
 
-    res.status(200).json(req.user)
+    const id  = req.user._id
+
+    // const address = await Address.findOne({user_id : id})
+    const address = await Address.find({user_id : {$in : id}})
+   
+
+
+    if(address && address.length > 0){
+    res.status(200).json({user : req.user , address : address})
+    }
+    else{
+        res.status(200).json(req.user)
+    }
+    
 }
 
 //! deleteUser
@@ -112,7 +127,7 @@ export const userAddress  = async (req, res)=>{
     const {address, city, state, pinCode, phone} = req.body
 
     const user_id = req.user._id 
-    console.log(user_id)
+    // console.log(user_id)
 
     const newAddress = new Address({
         user_id,
@@ -128,5 +143,71 @@ export const userAddress  = async (req, res)=>{
         res.status(200).json(newAddress)
     } catch (error) {
         console.log("address m h error", error)
+    }
+}
+
+//! delete Address
+
+export const deleteAddress = async (req, res)=>{
+
+    try {
+        const ids = req.query.ids
+
+        if(ids.lenght ==0) return res.status(401).json({msg : "provide id to delete addresses"}) 
+    
+        const id = typeof ids === "string" ?  ids.split(",") : []
+        console.log(id)
+
+        await Address.deleteMany({_id : {$in : id}})
+
+        res.status(200).json({msg : "deleted"})
+        
+    } catch (error) {
+        console.log("delete address m h error", error)
+    }
+
+
+}
+
+//! forgot password token
+
+export const passwordToken = async (req, res)=>{
+
+    try {
+        const passwordToken = jwt.sign({id : req.user._id}, process.env.KEY, {expiresIn : "15m"})
+
+        res.cookie('passwordToken', passwordToken)
+        res.status(200).json(passwordToken)
+
+       
+    } catch (error) {
+        console.log("password token m h error", error)
+        
+    }
+
+}
+
+//! update password
+
+export const updatePassword = async (req, res)=>{
+    const {password} = req.body
+
+    // const passwordToken = req.cookies.passwordToken || req.headers.authorization && req.headers.authorization.split(" ")[1]
+    // res.clearCookie("passwordToken")
+
+    try {
+    const hashedPassword = await bcrypt.hash(password, 10)
+    
+    const updatedPasswrod = await User.findByIdAndUpdate(req.user._id,{
+        password : hashedPassword
+    }, {new : true})
+
+
+
+    res.status(200).json({updated :  updatedPasswrod})
+
+       
+    } catch (error) {
+        console.log("update password m h error", error)
     }
 }
