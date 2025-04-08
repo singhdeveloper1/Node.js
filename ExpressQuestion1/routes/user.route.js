@@ -19,6 +19,6 @@ router.put("/verify-reset-password", passwordAuthentication, updatePassword)
 
 //! upload image
 
-router.post("/profile-image", uploadLocal.single("image"), uploadAndSendToCloudinary)
+router.post("/profile-image",authentication, uploadLocal.single("image"), uploadAndSendToCloudinary)
 
 export default router 

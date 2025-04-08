@@ -3,6 +3,7 @@ import Token from "../model/token.model.js"
 import User from "../model/user.model.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
+import ProfileImage from "../model/profileImage.model.js"
 
 export const registerUser = async (req, res)=>{
     const {username, password, confirmPassword, email, firstname, lastname} = req.body
@@ -71,12 +72,19 @@ export const getUser = async(req, res)=>{
 
     // const address = await Address.findOne({user_id : id})
     const address = await Address.find({user_id : {$in : id}})
-   
-
-
-    if(address && address.length > 0){
-    res.status(200).json({user : req.user , address : address})
+    const image = await ProfileImage.findOne({user_id : id})
+  
+    if(address && address.length > 0 &&  image){
+    res.status(200).json({user : req.user , Profile_Picture : image.imageUrl , address : address})
     }
+    else if(image){
+        res.status(200).json({user : req.user , Profile_Picture : image.imageUrl})
+        }
+
+    else if(address.length > 0){
+        res.status(200).json({user : req.user, address : address})
+    }
+   
     else{
         res.status(200).json(req.user)
     }

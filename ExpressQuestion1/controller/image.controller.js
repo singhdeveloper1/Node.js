@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 dotenv.config()
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
+import ProfileImage from "../model/profileImage.model.js"
 
 
 cloudinary.config({
@@ -21,6 +22,19 @@ const uploadAndSendToCloudinary = async (req, res)=>{
         const result = await cloudinary.uploader.upload(localFilePath,{
             folder : "profile_images",
         })
+
+        //! saving the images on db
+
+        try {
+            const newImage = new ProfileImage({
+                user_id : req.user._id,
+                imageUrl : result.secure_url
+            })
+            await newImage.save()
+        } catch (error) {
+            console.log("image upload m h error image controoler", error)
+        }
+
 
         
         fs.unlinkSync(localFilePath)
