@@ -4,6 +4,7 @@ import User from "../model/user.model.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 import ProfileImage from "../model/profileImage.model.js"
+import sendMail from "../MailSender/mailSender.js"
 
 export const registerUser = async (req, res)=>{
     const {username, password, confirmPassword, email, firstname, lastname} = req.body
@@ -19,6 +20,8 @@ export const registerUser = async (req, res)=>{
 
     try {
         await newUser.save()
+
+        await sendMail(email, username)
         res.status(200).json(newUser)
     } catch (error) {
         console.log("register m h error", error)        
