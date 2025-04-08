@@ -21,7 +21,9 @@ export const registerUser = async (req, res)=>{
     try {
         await newUser.save()
 
-        await sendMail(email, username)
+        await sendMail(email, "welcome..." ,  `hello ${username } how are you... thanks for registering`)
+
+ 
         res.status(200).json(newUser)
     } catch (error) {
         console.log("register m h error", error)        
@@ -188,6 +190,12 @@ export const passwordToken = async (req, res)=>{
         const passwordToken = jwt.sign({id : req.user._id}, process.env.KEY, {expiresIn : "15m"})
 
         res.cookie('passwordToken', passwordToken)
+
+        const link = "http://localhost:1000/user/verify-reset-password"
+        const message =`hello ${req.user.username}  this is the link for reset password \n ${link}  \n this link is only valid for 14 min...`
+
+        await sendMail(req.user.email, "your reset password link" , message  )
+
         res.status(200).json(passwordToken)
 
        
@@ -213,9 +221,9 @@ export const updatePassword = async (req, res)=>{
         password : hashedPassword
     }, {new : true})
 
+  await sendMail(req.user.email, "informing", "password updated successfully")
 
-
-    res.status(200).json({updated :  updatedPasswrod})
+    res.status(200).json({msg :"password updated successfully",updated :  updatedPasswrod})
 
        
     } catch (error) {

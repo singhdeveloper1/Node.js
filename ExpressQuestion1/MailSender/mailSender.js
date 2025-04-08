@@ -10,12 +10,12 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-const sendMail = async (email, username)=>{
+const sendMail = async (email,subject, message)=>{
     const mailOptions = {
         from : "spriyanshu436@gmail.com",
         to:email,
-        subject : "Welcome...",
-        text : `hello ${username } hoe are you... thanks for registering`
+        subject,
+        text : message
     }
 
     try {
