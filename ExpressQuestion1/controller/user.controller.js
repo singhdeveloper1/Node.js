@@ -3,6 +3,8 @@ import Token from "../model/token.model.js"
 import User from "../model/user.model.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
+import ProfileImage from "../model/profileImage.model.js"
+import sendMail from "../MailSender/mailSender.js"
 
 export const registerUser = async (req, res)=>{
     const {username, password, confirmPassword, email, firstname, lastname} = req.body
@@ -18,6 +20,10 @@ export const registerUser = async (req, res)=>{
 
     try {
         await newUser.save()
+
+        await sendMail(email, "welcome..." ,  `hello ${username } how are you... thanks for registering`)
+
+ 
         res.status(200).json(newUser)
     } catch (error) {
         console.log("register m h error", error)        
@@ -71,12 +77,19 @@ export const getUser = async(req, res)=>{
 
     // const address = await Address.findOne({user_id : id})
     const address = await Address.find({user_id : {$in : id}})
-   
-
-
-    if(address && address.length > 0){
-    res.status(200).json({user : req.user , address : address})
+    const image = await ProfileImage.findOne({user_id : id})
+  
+    if(address && address.length > 0 &&  image){
+    res.status(200).json({user : req.user , Profile_Picture : image.imageUrl , address : address})
     }
+    else if(image){
+        res.status(200).json({user : req.user , Profile_Picture : image.imageUrl})
+        }
+
+    else if(address.length > 0){
+        res.status(200).json({user : req.user, address : address})
+    }
+   
     else{
         res.status(200).json(req.user)
     }
@@ -177,6 +190,12 @@ export const passwordToken = async (req, res)=>{
         const passwordToken = jwt.sign({id : req.user._id}, process.env.KEY, {expiresIn : "15m"})
 
         res.cookie('passwordToken', passwordToken)
+
+        const link = "http://localhost:1000/user/verify-reset-password"
+        const message =`hello ${req.user.username}  this is the link for reset password \n ${link}  \n this link is only valid for 14 min...`
+
+        await sendMail(req.user.email, "your reset password link" , message  )
+
         res.status(200).json(passwordToken)
 
        
@@ -202,9 +221,9 @@ export const updatePassword = async (req, res)=>{
         password : hashedPassword
     }, {new : true})
 
+  await sendMail(req.user.email, "informing", "password updated successfully")
 
-
-    res.status(200).json({updated :  updatedPasswrod})
+    res.status(200).json({msg :"password updated successfully",updated :  updatedPasswrod})
 
        
     } catch (error) {
