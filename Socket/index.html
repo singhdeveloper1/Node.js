@@ -72,11 +72,10 @@
             opacity: 0.6;
         }
     </style>
-    
-
-    
+ 
 </head>
 <body>
+
     <form id="form">
         <input id="input" type="text" />
         <button>Send</button>
@@ -92,25 +91,50 @@
     const messages = document.getElementById("messages")
 
     const username = prompt("enter your username")
+   
+
+      //! for old messages
+      socket.on("old message", function(data){
+        // console.log("received old message", data)
+            
+            data.forEach(item=>{
+                
+               const li = document.createElement("li");
+            // console.log(item.user),
+            // console.log(item.message),
+               li.textContent =  item.user == username ? `you : ${item.message}`  : `${item.user} : ${item.message}` ,
+
+            //    console.log("Appending:", li, "Type:", typeof li, li instanceof Node); // Should be true
+
+
+               messages.appendChild(li)
+            
+           })
+    })
+
+
     form.addEventListener("submit", function(e){
         e.preventDefault() 
+        if(!username){
+            return alert("refresh to enter your name")
+        }
 
-        if(input.value){
+       else if(input.value){
             socket.emit("chat message", {
                 user : username,
-                msg : input.value
+                message : input.value
             })
             input.value = ""
-        }
+        }     
     })
 
     socket.on("chat message" , function(data){
         const item = document.createElement("li")
         if(data.user === username){
 
-            item.textContent = `You :   ${data.msg}`
+            item.textContent = `You :   ${data.message}`
         }else{
-        item.textContent = `${data.user} :   ${data.msg}`
+        item.textContent = `${data.user} :   ${data.message}`
         }
         messages.appendChild(item)
     })

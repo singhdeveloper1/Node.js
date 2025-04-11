@@ -8,3 +8,6 @@
 4. Exxpress Question-2 next two part is done means total four part ( 7-4-25)
 5. Express Question-2 all parts i.e six parts completed ( 8-4-29)
 5. Created a new folder Socket and implemented a simple code to understand the work of socket.io
+6. worked in Socket folder where
+  a- firstly created database to store username and messages 
+  b- after that show the previous msg to the new user
