@@ -7,8 +7,13 @@ const Chat = () => {
     const [input, setInput] = useState("")
     const [messages, setMessages] = useState([])
     const [username, setUserName] = useState("")
+    const [button, setButton] = useState(true)
+    // const [id, setId] = useState("")
+
+    const idRef = useRef(null)
     const socketRef = useRef(null)
 
+    
     
     useEffect(()=>{
         const user = prompt("Enter Username !!")
@@ -35,6 +40,14 @@ const Chat = () => {
           
         })
 
+        socketRef.current.on("update message", (updatedMessage)=>{
+            setMessages(prev=>(
+                prev.map(message=>(
+                    message._id === updatedMessage._id ? updatedMessage : message
+                ))
+            ))
+        })
+
         return ()=>{
             socketRef.current.disconnect()
         }
@@ -42,8 +55,8 @@ const Chat = () => {
 
     },[])
 
-    const handleSubmit = (e)=>{
-        e.preventDefault()
+    const handleSend = (e)=>{
+        
 
         if(!username) return alert("refresh to enter username")
 
@@ -53,24 +66,58 @@ const Chat = () => {
                     message : input
                 })
             }
-            setInput(" ")
+            setInput("")
+    }
+
+    const handleEditMessage = (message)=>{
+        setButton(false)
+        setInput(message.message)
+        // setId(message._id)
+        idRef.current = message._id
+        // socketRef.current.emit("edit message",message)
+    }
+
+
+    const handleUpdate = () =>{
+       console.log(input)
+    //    console.log(id)
+        socketRef.current.emit("update message", {
+            id : idRef.current,
+            message : input
+        })
+
+        // socketRef.current.on("chat message", data=>{
+        //     console.log("update" ,data)
+        // })
+
+        setInput("")
+        setButton(true)
+        
     }
 
   return (
     <div>
-      <form onSubmit={handleSubmit} id='form'>
+      <form onSubmit={(e)=>e.preventDefault()} id='form'>
         <input type='text' value={input} onChange={(e)=>setInput(e.target.value)} id='input' />
         
-        <button>Send</button>
+        {
+
+            button ?<button onClick={handleSend}>Send</button> : <button onClick={handleUpdate}>Update</button>
+        }
       </form>
 
       <ul id='messages'>
        {
-        messages.map((message)=>(
+        messages.map((message, index)=>(
 
-            <li>
+            <li key={index}>
+                
                  {
+                    
                 message.user === username ? `You : ${message.message}` : `${message.user} : ${message.message}`
+            }
+            {
+                message.user === username ? <span onClick={()=>handleEditMessage(message)}>edit</span> : ""
             }
             </li>
            

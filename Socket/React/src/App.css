@@ -111,3 +111,17 @@ ul#messages li::before {
     content: "💬 ";
     opacity: 0.6;
 }
+
+
+span {
+  cursor: pointer;
+  font-size: 14px;
+  color: #007bff; /* blueviolet color */
+  margin-left: 10px;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+span:hover {
+  color: #0056b3; /* darker blue on hover */
+  text-decoration: underline;
+}

@@ -45,7 +45,34 @@ io.on("connection", async(socket)=>{
 
         // socket.broadcast.emit("chat message" , data)
         io.emit("chat message" , data)
+
     })
+    
+    //! editing mesage
+    
+    // socket.on("edit message", async (message)=>{
+        //     console.log("edit data", message)
+        
+        //     const editMessage = await Message.findByIdAndUpdate(message._id,{
+            //         message : message.message
+            //     },{new : true})       
+            
+            // })
+            
+            //! sending updated message
+        socket.on("update message",async (data)=>{
+            console.log("update", data.id)
+
+            const updatedData = await Message.findByIdAndUpdate(data.id,{
+                message : data.message
+            },{new : true})
+
+            console.log(updatedData)
+
+            io.emit("update message", updatedData)
+        })
+
+            
     // socket.on("disconnect",()=>{
     //     console.log("user disconnected")
     // })
