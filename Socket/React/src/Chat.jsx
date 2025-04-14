@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import io from "socket.io-client"
+import './App.css'
 
 const Chat = () => {
 
@@ -57,13 +58,13 @@ const Chat = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input type='text' value={input} onChange={(e)=>setInput(e.target.value)} />
+      <form onSubmit={handleSubmit} id='form'>
+        <input type='text' value={input} onChange={(e)=>setInput(e.target.value)} id='input' />
         
         <button>Send</button>
       </form>
 
-      <ul>
+      <ul id='messages'>
        {
         messages.map((message)=>(
 
