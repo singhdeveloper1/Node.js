@@ -20,6 +20,29 @@ app.get("/", (req, res)=>{
     res.send(`<h1>Home</h1>`)
 })
 
+//! Start google auth
+app.get("/auth/google", passport.authenticate("google", {scope :["profile", "email"]}))
+
+//! handle callback
+app.get("/auth/google/callback", passport.authenticate("google", {failureRedirect : "/", successRedirect : "/profile"}))
+
+//! show profile
+app.get("/profile", (req, res)=>{
+    res.send(`
+        <h1>Profile</h1>
+        <pre>${JSON.stringify(req.user,null,2)}</pre>
+        <a href="/logout">Logout</a>
+        `)
+})
+
+//! logout
+app.get("/logout", (Req, res)=>{
+    res.redirect("/")
+})
+
+
+
+
 const port = process.env.PORT
 
 app.listen(port,()=>{
