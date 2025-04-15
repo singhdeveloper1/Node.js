@@ -13,7 +13,7 @@ const googleSchema = new mongoose.Schema({
     },
 
     email : {
-        type : email,
+        type : String,
         required : true,
         unique : true
     },

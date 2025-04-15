@@ -6,7 +6,7 @@ import Google from "./models/google.model.js"
 passport.use(new GoogleStrategy({
     clientID : process.env.Google_Client_ID, 
     clientSecret : process.env.Google_Client_Secret,
-    callbackURL : "auth/google/callback"
+    callbackURL : "/auth/google/callback"
 },
 async (accessToken, refreshToken, profile, done)=>{
     try {
