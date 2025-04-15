@@ -5,6 +5,7 @@ import {Server} from "socket.io"
 import http from "http"
 import connectdb from "./db.js";
 import Message from "./model/message.model.js";
+import cors from  "cors"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,35 +16,25 @@ const app = express()
 connectdb()
 
 const server = http.createServer(app)
-const io = new Server(server)
+const io = new Server(server,{
+    cors :{
+        origin : "http://localhost:5173",
+        methods : ["GET", "POST"]
+    }
+})
 
 // app.get('/', (req, res)=>{
 //     res.sendFile(__dirname + "/index.html")
 // })
+app.use(cors())
 app.use(express.static(__dirname));
-
-// let  id = 1
-
 
 io.on("connection", async(socket)=>{
 
     const message = await Message.find()
-    // console.log(message)
-
-    // console.log(message)
-    // message.map(item=>(
-    //     console.log(item.user),
-    //     console.log(item.message)
-    // ))
-
     socket.emit("old message", message)
 
-
-    // socket.emit("id", id++)
-
-    // console.log('a user connected')
     socket.on("chat message",async (data)=>{
-        // console.log(`${data.user}  : ${data.message}`)
 
       const record =   Message({
         user:  data.user,
@@ -54,7 +45,19 @@ io.on("connection", async(socket)=>{
 
         // socket.broadcast.emit("chat message" , data)
         io.emit("chat message" , data)
+
     })
+                
+            //! sending updated message
+        socket.on("update message",async (data)=>{
+            const updatedData = await Message.findByIdAndUpdate(data.id,{
+                message : data.message
+            },{new : true})
+
+            io.emit("update message", updatedData)
+        })
+
+            
     // socket.on("disconnect",()=>{
     //     console.log("user disconnected")
     // })

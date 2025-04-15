@@ -1,7 +1,7 @@
 import "dotenv/config"
 import express from "express"
 import session from "express-session"
-import passport from "./passport/js"
+import passport from "./passport.js"
 
 
 const app = express()
