@@ -14,3 +14,6 @@
 7. Worked in Socket folder where (14-4-25) <br>
   a- firstly converted the whole frontend code from html and javascript to React.js for better understanding and managing state. <br>
   b- after that added a edit functionality on message in which only the sender are allow to edit the message.
+8. Created 2 folders i.e GoogleOAth and GoogleOAthWithDB where (15-4-25) <br>
+  a- In GoogleOAth folder implemented the code of simple login with google (google authentication). <br>
+  b- In GoogleOAthWithDB folder implemented the code of login with google (google authentication) in which database is used for storing the data of information.
