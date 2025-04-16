@@ -12,10 +12,14 @@ router.get("/google", passport.authenticate("google", {scope : ["profile", "emai
 router.get("/google/callback", passport.authenticate("google", {failureRedirect : "/", successRedirect : "/auth/profile"}))
 
 router.get("/profile", (req, res)=>{
-    res.send(`
-        <h1>Data</h1>
-        <pre>${JSON.stringify(req.user , null, 5)}</pre>
-        `)
+    // res.send(`
+    //     <h1>Data</h1>
+    //     <pre>${JSON.stringify(req.user , null, 5)}</pre>
+    //     `)
+
+   res.status(200).json(req.user)
+
+
 })
 
 export default router
