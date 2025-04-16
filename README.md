@@ -18,3 +18,5 @@
   a- In GoogleOAth folder implemented the code of simple login with google (google authentication). <br>
   b- In GoogleOAthWithDB folder implemented the code of login with google (google authentication) in which database is used for storing the data of information.
 9. Added frontend (react.js) in GoogleOAthWithDB. (16-4-25)
+
+## Completed...
